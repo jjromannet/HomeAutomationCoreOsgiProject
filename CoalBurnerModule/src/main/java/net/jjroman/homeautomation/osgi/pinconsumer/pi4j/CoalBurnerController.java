@@ -7,6 +7,12 @@ import net.jjroman.homeautomation.osgi.pinservice.api.IGPIOPin;
 import org.osgi.service.log.LogService;
 
 /**
+ * Main Logic for controlling Coal burner is defined here.
+ *
+ * Coal burner have two engines
+ * 1) Fan - which blows air into coal burning chamber
+ * 2) Dispenser - which dispense coal
+ *
  * Created by Jan on 14/03/2015.
  */
 public class CoalBurnerController implements Runnable{
@@ -28,7 +34,7 @@ public class CoalBurnerController implements Runnable{
 
     private enum TurnedState{
         OFF,
-        ON;
+        ON
     }
 
     private enum RunningState{
@@ -57,7 +63,6 @@ public class CoalBurnerController implements Runnable{
             try {
                 thread.join(1000);
             } catch (InterruptedException e) {
-                e.printStackTrace();
                 m_log.log(LogService.LOG_ERROR, "Stop method interrupted while waiting for worker thread to stop. There may be running thread leak.");
             } finally {
                 thread = null;
@@ -109,7 +114,7 @@ public class CoalBurnerController implements Runnable{
                     updateStatus();
                 }
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                m_log.log(LogService.LOG_WARNING, "forcibly interrupted", e);
             }
         }finally {
             fanPin.setState(HiLoPinState.LOW);

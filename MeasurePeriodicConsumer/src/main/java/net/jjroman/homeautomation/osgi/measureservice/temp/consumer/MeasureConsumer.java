@@ -1,16 +1,20 @@
 package net.jjroman.homeautomation.osgi.measureservice.temp.consumer;
 
 import net.jjroman.homeautomation.osgi.measureservice.api.DoubleMeasure;
+import org.osgi.service.log.LogService;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
+ * Periodic Measure Consumer. Consumes Measure service and prints out reading of it every second.
  * Created by Jan on 13/03/2015.
  */
 public class MeasureConsumer {
     private volatile DoubleMeasure doubleMeasure;
+    private volatile LogService m_log;
 
     private AtomicBoolean run = new AtomicBoolean();
+
 
     private final Thread workerThread;
     public MeasureConsumer(){
@@ -24,7 +28,7 @@ public class MeasureConsumer {
                         System.out.print(String.format("Current Reading: %f\n", doubleMeasure.getValue()));
                     } catch (InterruptedException e) {
                         run.set(false);
-                        e.printStackTrace();
+                        m_log.log(LogService.LOG_WARNING, "forcibly interrupted", e);
                         break;
                     }
                 }
@@ -50,8 +54,8 @@ public class MeasureConsumer {
                 System.out.println("Joined");
             }
         } catch (InterruptedException e) {
-            e.printStackTrace();
-            System.out.println("force interrupted");
+            m_log.log(LogService.LOG_WARNING, "forcibly interrupted", e);
+            System.out.println("forcibly interrupted");
             workerThread.interrupt();
         }
     }

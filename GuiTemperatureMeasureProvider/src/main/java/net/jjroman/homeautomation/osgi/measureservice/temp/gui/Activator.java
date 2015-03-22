@@ -18,6 +18,8 @@ public class Activator implements BundleActivator {
 
     public void start(final BundleContext bundleContext) throws Exception {
         simpleFrame = new SimpleFrame(bundleContext);
+
+
         Dictionary<String, String> props = new Hashtable<String, String>();
         props.put("MeasureStringId", "CoalBurnerWaterTank");
         bundleContext.registerService(

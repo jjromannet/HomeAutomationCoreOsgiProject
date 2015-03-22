@@ -3,17 +3,18 @@ package net.jjroman.homeautomation.osgi.measureservice.temp.gui;
 import net.jjroman.homeautomation.osgi.measureservice.api.DoubleMeasure;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
+import org.osgi.service.log.LogService;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /**
+ * Provides GUI for manual manipulation of measure value.
  * Created by Jan on 13/03/2015.
  */
 public class SimpleFrame extends JFrame implements DoubleMeasure, ChangeListener {
 
-    //private JTextField passage = null;
     private JSlider slider = null;
 
     /**
@@ -33,6 +34,7 @@ public class SimpleFrame extends JFrame implements DoubleMeasure, ChangeListener
         System.out.println("Constructor finished");
     }
 
+    @Override
     public double getValue() {
         double retval = 0;
         if(slider != null){
@@ -48,7 +50,6 @@ public class SimpleFrame extends JFrame implements DoubleMeasure, ChangeListener
         // The check button
         JButton checkButton = new JButton();
         result = new JLabel();
-        //passage = new JTextField();
         slider = new JSlider(JSlider.HORIZONTAL, 0,100,0);
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); // Stop Felix...
@@ -57,7 +58,6 @@ public class SimpleFrame extends JFrame implements DoubleMeasure, ChangeListener
         checkButton.setText("Check");
         checkButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
-                //check();
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -100,14 +100,17 @@ public class SimpleFrame extends JFrame implements DoubleMeasure, ChangeListener
         try {
             bundleContext.getBundle().stop();
         } catch (BundleException e) {
-            e.printStackTrace();
+            //m_log.log(LogService.LOG_WARNING, "Bundle exception on stop", e);
+            // TODO
+            System.err.println("m_log.log(LogService.LOG_WARNING, \"Bundle exception on stop\", e);");
         }
     }
     public void disposeOnly(){
         super.dispose();
     }
 
+    @Override
     public void stateChanged(ChangeEvent e) {
-
+        // required by slider
     }
 }
