@@ -3,6 +3,8 @@ package net.jjroman.homeautomation.osgi.measureservice.temp.gui;
 import net.jjroman.homeautomation.osgi.measureservice.api.DoubleMeasure;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
+import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.framework.ServiceReference;
 import org.osgi.service.log.LogService;
 
 import javax.swing.*;
@@ -22,16 +24,17 @@ public class SimpleFrame extends JFrame implements DoubleMeasure, ChangeListener
      */
     private JLabel result = null;
 
-    private final BundleContext bundleContext;
+    transient private final BundleContext bundleContext;
 
     public SimpleFrame(BundleContext bundleContext){
         super();
-        System.out.println("Constructor called");
+
+        logService(LogService.LOG_DEBUG, "Constructor called", null);
         initComponents();
         this.setTitle("Spellchecker Gui");
 
         this.bundleContext = bundleContext;
-        System.out.println("Constructor finished");
+        logService(LogService.LOG_DEBUG, "Constructor finished", null);
     }
 
     @Override
@@ -56,10 +59,7 @@ public class SimpleFrame extends JFrame implements DoubleMeasure, ChangeListener
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         checkButton.setText("Check");
-        checkButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent e) {
-            }
-        });
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -89,20 +89,17 @@ public class SimpleFrame extends JFrame implements DoubleMeasure, ChangeListener
     }
 
     public void start() {
-        System.out.println("start() starting");
+        logService(LogService.LOG_DEBUG, "start() starting", null);
         this.setVisible(true);
-        System.out.println("start() finished");
+        logService(LogService.LOG_DEBUG, "start() finished", null);
     }
 
     @Override
     public void dispose() {
-        //super.dispose();
         try {
             bundleContext.getBundle().stop();
         } catch (BundleException e) {
-            //m_log.log(LogService.LOG_WARNING, "Bundle exception on stop", e);
-            // TODO
-            System.err.println("m_log.log(LogService.LOG_WARNING, \"Bundle exception on stop\", e);");
+            logService(LogService.LOG_WARNING, "Bundle exception on stop", e);
         }
     }
     public void disposeOnly(){
@@ -112,5 +109,34 @@ public class SimpleFrame extends JFrame implements DoubleMeasure, ChangeListener
     @Override
     public void stateChanged(ChangeEvent e) {
         // required by slider
+    }
+
+    private void logService(int level, String mesage, Throwable th){
+        LogService logService = null;
+        try {
+            ServiceReference[] refs = bundleContext.getServiceReferences(LogService.class.getName(), "");
+            if (refs != null && refs.length > 0) {
+                Object service = bundleContext.getService(refs[0]);
+                if (LogService.class.isAssignableFrom(service.getClass())) {
+                    logService = (LogService) service;
+                }
+            }
+        }catch (InvalidSyntaxException ise){
+            ise.printStackTrace(System.err);
+        }
+        if(logService == null){
+            System.err.print(String.format("Severity: %d, message: %s", level, mesage));
+            if(th != null){
+                th.printStackTrace(System.err);
+            }
+            System.err.println();
+        }else{
+            if(th == null){
+                logService.log(level, mesage);
+            }else{
+                logService.log(level, mesage, th);
+            }
+        }
+
     }
 }

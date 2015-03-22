@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class MeasureConsumer {
     private volatile DoubleMeasure doubleMeasure;
-    private volatile LogService m_log;
+    private volatile LogService logService;
 
     private AtomicBoolean run = new AtomicBoolean();
 
@@ -21,14 +21,14 @@ public class MeasureConsumer {
         workerThread = new Thread(new Runnable(){
 
             public void run() {
-                System.out.println("run() called");
+                logService.log(LogService.LOG_DEBUG, "run() called");
                 while(run.get()){
                     try {
                         Thread.sleep(1000);
-                        System.out.print(String.format("Current Reading: %f\n", doubleMeasure.getValue()));
+                        logService.log(LogService.LOG_INFO, String.format("Current Reading: %f%n", doubleMeasure.getValue()));
                     } catch (InterruptedException e) {
                         run.set(false);
-                        m_log.log(LogService.LOG_WARNING, "forcibly interrupted", e);
+                        logService.log(LogService.LOG_WARNING, "forcibly interrupted", e);
                         break;
                     }
                 }
@@ -37,25 +37,24 @@ public class MeasureConsumer {
     }
 
     private void serviceAdded(){
-        System.out.println("serviceAdded() called");
+        logService.log(LogService.LOG_DEBUG, "serviceAdded() called");
         run.set(true);
-        System.out.println("run set to: " + run.get());
+        logService.log(LogService.LOG_DEBUG, "run set to: " + run.get());
         workerThread.start();
     }
     private void serviceRemoved(){
-        System.out.println("serviceRemoved() called");
+        logService.log(LogService.LOG_DEBUG, "serviceRemoved() called");
         run.set(false);
-        System.out.println("run set to: " + run.get());
+        logService.log(LogService.LOG_DEBUG, "run set to: " + run.get());
         try {
-            System.out.println("is Alive?");
+            logService.log(LogService.LOG_DEBUG, "is Alive?");
             if(workerThread.isAlive()) {
-                System.out.println("yes is Alive");
+                logService.log(LogService.LOG_DEBUG, "yes is Alive");
                 workerThread.join(2000);
-                System.out.println("Joined");
+                logService.log(LogService.LOG_DEBUG, "Joined");
             }
         } catch (InterruptedException e) {
-            m_log.log(LogService.LOG_WARNING, "forcibly interrupted", e);
-            System.out.println("forcibly interrupted");
+            logService.log(LogService.LOG_WARNING, "forcibly interrupted", e);
             workerThread.interrupt();
         }
     }
