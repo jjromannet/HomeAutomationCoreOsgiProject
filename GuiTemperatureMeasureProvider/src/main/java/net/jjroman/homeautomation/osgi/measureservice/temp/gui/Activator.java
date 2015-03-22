@@ -16,6 +16,7 @@ public class Activator implements BundleActivator {
 
     private SimpleFrame simpleFrame = null;
 
+    @Override
     public void start(final BundleContext bundleContext) throws Exception {
 
 
@@ -30,8 +31,8 @@ public class Activator implements BundleActivator {
         simpleFrame.start();
     }
 
+    @Override
     public void stop(BundleContext bundleContext) throws Exception {
-        System.out.println("Activator.stop() starting");
         simpleFrame.disposeOnly();
     }
 }

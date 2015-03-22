@@ -21,9 +21,9 @@ public class CoalBurnerController implements Runnable{
     private volatile IGPIOPin dispenserPin;
     private volatile DoubleMeasure coalBurnerWaterTank;
     private volatile ConfigService configService;
-    private volatile LogService m_log;
+    private volatile LogService logService;
 
-    private volatile RunningState curreState = RunningState.STANDBY;
+    private volatile RunningState currentState = RunningState.STANDBY;
 
     private Thread thread;
 
@@ -47,9 +47,8 @@ public class CoalBurnerController implements Runnable{
         }
     }
 
-    //public void start(BundleContext context){
     public void start(){
-        m_log.log(LogService.LOG_INFO, "Starting coal burner working thread");
+        logService.log(LogService.LOG_INFO, "Starting coal burner working thread");
         synchronized (this){
             thread = new Thread(this);
             thread.start();
@@ -57,19 +56,20 @@ public class CoalBurnerController implements Runnable{
     }
 
     public void stop(){
-        m_log.log(LogService.LOG_INFO, "Stopping coal burner working thread");
+        logService.log(LogService.LOG_INFO, "Stopping coal burner working thread");
         synchronized (this) {
             thread.interrupt();
             try {
                 thread.join(1000);
             } catch (InterruptedException e) {
-                m_log.log(LogService.LOG_ERROR, "Stop method interrupted while waiting for worker thread to stop. There may be running thread leak.");
+                logService.log(LogService.LOG_ERROR, "Stop method interrupted while waiting for worker thread to stop. There may be running thread leak.");
             } finally {
                 thread = null;
             }
         }
     }
 
+    @Override
     public void run() {
         try {
             final TimeUnit defaultTimeUnit = TimeUnit.SECOND;
@@ -87,7 +87,7 @@ public class CoalBurnerController implements Runnable{
 
             try {
                 while (!Thread.interrupted()) {
-                    if (RunningState.ACTIVE.equals(curreState)) {
+                    if (RunningState.ACTIVE.equals(currentState)) {
                         executeCycle(active);
                         timeFromLastActive = 0;
                     } else {
@@ -97,7 +97,7 @@ public class CoalBurnerController implements Runnable{
                             executeCycle(standby);
                             timeFromLastActive = 0;
                         }
-                        Thread.sleep(standbyPauseUnit * defaultTimeUnit.getMilisecondMultiplier());
+                        Thread.sleep((long)standbyPauseUnit * defaultTimeUnit.getMilisecondMultiplier());
                     }
                     // ACTIVE ...
                     // START FAN
@@ -114,7 +114,7 @@ public class CoalBurnerController implements Runnable{
                     updateStatus();
                 }
             } catch (InterruptedException e) {
-                m_log.log(LogService.LOG_WARNING, "forcibly interrupted", e);
+                logService.log(LogService.LOG_WARNING, "forcibly interrupted", e);
             }
         }finally {
             fanPin.setState(HiLoPinState.LOW);
@@ -124,21 +124,23 @@ public class CoalBurnerController implements Runnable{
 
     private void updateStatus(){
         double currentTemp = coalBurnerWaterTank.getValue();
-        switch (curreState){
-                case STANDBY: {
-                    double value = Double.parseDouble(configService.getConfigValueByNamespaceAndKey(CONFIG_NAMESPACE, CONFIG_GOTO_ACTIVE_TEMP));
+        double value;
+        switch (currentState){
+                case STANDBY:
+                    value = Double.parseDouble(configService.getConfigValueByNamespaceAndKey(CONFIG_NAMESPACE, CONFIG_GOTO_ACTIVE_TEMP));
                     if (value > currentTemp) {
-                        curreState = curreState.toggle();
+                        currentState = currentState.toggle();
                     }
-                }
                 break;
-                case ACTIVE: {
-                    double value = Double.parseDouble(configService.getConfigValueByNamespaceAndKey(CONFIG_NAMESPACE, CONFIG_GOTO_STANDBY_TEMP));
+                case ACTIVE:
+                    value = Double.parseDouble(configService.getConfigValueByNamespaceAndKey(CONFIG_NAMESPACE, CONFIG_GOTO_STANDBY_TEMP));
                     if (value < currentTemp) {
-                        curreState = curreState.toggle();
+                        currentState = currentState.toggle();
                     }
-                }
                 break;
+
+                default:
+                    throw new UnsupportedOperationException("Unknown current state");
         }
     }
 

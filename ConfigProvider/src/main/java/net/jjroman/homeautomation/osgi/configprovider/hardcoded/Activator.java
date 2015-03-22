@@ -9,12 +9,14 @@ import org.osgi.framework.BundleContext;
  */
 public class Activator implements BundleActivator {
 
+    @Override
     public void start(BundleContext bundleContext) throws Exception {
 
         bundleContext.registerService(
                 ConfigService.class.getName(), new ConfigProvider(), null);
     }
 
+    @Override
     public void stop(BundleContext bundleContext) throws Exception {
 
     }

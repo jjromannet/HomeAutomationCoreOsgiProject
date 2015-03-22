@@ -20,10 +20,12 @@ public class PinProviderPi4J implements IGPIOPin{
         this.gpioController = gpioController;
     }
 
+    @Override
     public HiLoPinState getState() {
         return translate(pin.getState());
     }
 
+    @Override
     public void setState(HiLoPinState value) {
         pin.setState(translate(value));
     }
@@ -52,7 +54,6 @@ public class PinProviderPi4J implements IGPIOPin{
             default:
                 return PinState.LOW;
         }
-        //throw new Exception("Unknown HiLoPinState");
     }
 
     GpioPinDigitalOutput getPin(){

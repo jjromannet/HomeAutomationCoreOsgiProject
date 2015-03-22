@@ -24,6 +24,7 @@ public class Activator implements BundleActivator{
 
     private final static String PROPERTY_NAME_PIN_NUMBER = "PinNumber";
 
+    @Override
     public void start(BundleContext bundleContext) throws Exception {
         pinProviders = new ArrayList<PinProviderPi4J>();
         GpioController gpioController = GpioFactory.getInstance();
@@ -37,6 +38,7 @@ public class Activator implements BundleActivator{
         }
     }
 
+    @Override
     public void stop(BundleContext bundleContext) throws Exception {
         for(PinProviderPi4J pinProviderPi4J : pinProviders){
             pinProviderPi4J.dispose();

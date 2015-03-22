@@ -24,7 +24,7 @@ public class SimpleFrame extends JFrame implements DoubleMeasure, ChangeListener
      */
     private JLabel result = null;
 
-    transient private final BundleContext bundleContext;
+    private final transient BundleContext bundleContext;
 
     public SimpleFrame(BundleContext bundleContext){
         super();
@@ -122,12 +122,12 @@ public class SimpleFrame extends JFrame implements DoubleMeasure, ChangeListener
                 }
             }
         }catch (InvalidSyntaxException ise){
-            ise.printStackTrace(System.err);
+            logOnStdErr(ise);
         }
         if(logService == null){
             System.err.print(String.format("Severity: %d, message: %s", level, mesage));
             if(th != null){
-                th.printStackTrace(System.err);
+                logOnStdErr(th);
             }
             System.err.println();
         }else{
@@ -138,5 +138,13 @@ public class SimpleFrame extends JFrame implements DoubleMeasure, ChangeListener
             }
         }
 
+    }
+    private void logOnStdErr(Throwable th){
+        if(th == null) return;
+        System.err.println(th.getMessage());
+        for(StackTraceElement element: th.getStackTrace()){
+            System.err.print("\t");
+            System.err.println(element.toString());
+        }
     }
 }

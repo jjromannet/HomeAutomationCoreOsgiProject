@@ -13,6 +13,7 @@ import org.osgi.service.log.LogService;
  * Created by Jan on 13/03/2015.
  */
 public class Activator extends DependencyActivatorBase{
+
     @Override
     public void init(BundleContext bundleContext, DependencyManager dependencyManager) throws Exception {
         dependencyManager.add(createComponent()

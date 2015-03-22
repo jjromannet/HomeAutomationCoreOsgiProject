@@ -19,6 +19,7 @@ public class Activator implements BundleActivator {
 
     private final static String PROPERTY_NAME_PIN_NUMBER = "PinNumber";
 
+    @Override
     public void start(BundleContext bundleContext) throws Exception {
         pinProviders = new ArrayList<PinProviderConsole>();
 
@@ -30,6 +31,7 @@ public class Activator implements BundleActivator {
         }
     }
 
+    @Override
     public void stop(BundleContext bundleContext) throws Exception {
         pinProviders = null;
     }
