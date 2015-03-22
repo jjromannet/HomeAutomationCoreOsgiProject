@@ -128,15 +128,14 @@ public class CoalBurnerController implements Runnable{
         switch (currentState){
                 case STANDBY:
                     value = Double.parseDouble(configService.getConfigValueByNamespaceAndKey(CONFIG_NAMESPACE, CONFIG_GOTO_ACTIVE_TEMP));
-                    if (value > currentTemp) {
+                    if (value > currentTemp)
                         currentState = currentState.toggle();
-                    }
                 break;
+
                 case ACTIVE:
                     value = Double.parseDouble(configService.getConfigValueByNamespaceAndKey(CONFIG_NAMESPACE, CONFIG_GOTO_STANDBY_TEMP));
-                    if (value < currentTemp) {
+                    if (value < currentTemp)
                         currentState = currentState.toggle();
-                    }
                 break;
 
                 default:

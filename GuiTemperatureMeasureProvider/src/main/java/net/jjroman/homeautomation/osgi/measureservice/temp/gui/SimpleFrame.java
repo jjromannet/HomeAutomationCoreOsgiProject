@@ -140,7 +140,9 @@ public class SimpleFrame extends JFrame implements DoubleMeasure, ChangeListener
 
     }
     private void logOnStdErr(Throwable th){
-        if(th == null) return;
+        if(th == null){
+            return;
+        }
         System.err.println(th.getMessage());
         for(StackTraceElement element: th.getStackTrace()){
             System.err.print("\t");

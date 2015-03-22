@@ -18,6 +18,6 @@ public class Activator implements BundleActivator {
 
     @Override
     public void stop(BundleContext bundleContext) throws Exception {
-
+        // do nothing on bundle stop
     }
 }

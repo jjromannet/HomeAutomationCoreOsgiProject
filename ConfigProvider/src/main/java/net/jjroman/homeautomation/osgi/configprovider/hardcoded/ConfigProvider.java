@@ -17,13 +17,16 @@ public class ConfigProvider implements ConfigService {
         Properties coalBurnerProperties = new Properties();
         coalBurnerProperties.setProperty("goto.active.temperature",  "55.00");
         coalBurnerProperties.setProperty("goto.standby.temperature", "65.00");
-        Map<String, Properties> repo = new HashMap<String, Properties>();
-        repo.put("coalburner", coalBurnerProperties);
-        this.repo = Collections.unmodifiableMap(repo);
+        Map<String, Properties> tmpRepo = new HashMap<String, Properties>();
+        tmpRepo.put("coalburner", coalBurnerProperties);
+        this.repo = Collections.unmodifiableMap(tmpRepo);
     }
 
+    @Override
     public String getConfigValueByNamespaceAndKey(String namespace, String key) {
-        if(namespace == null || key == null) return null;
+        if(namespace == null || key == null) {
+            return null;
+        }
         if(repo.containsKey(namespace) && repo.get(namespace).containsKey(key) ){
             return repo.get(namespace).getProperty(key);
         }

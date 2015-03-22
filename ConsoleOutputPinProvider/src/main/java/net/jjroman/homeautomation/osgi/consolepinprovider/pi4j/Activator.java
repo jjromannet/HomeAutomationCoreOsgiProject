@@ -5,23 +5,20 @@ import net.jjroman.homeautomation.osgi.pinservice.api.IGPIOPin;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
-import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
-import java.util.List;
 
 /**
+ * Console Output Pin Provider activator class
  * Created by Jan on 09/03/2015.
  */
 public class Activator implements BundleActivator {
 
-    private List<PinProviderConsole> pinProviders;
 
     private final static String PROPERTY_NAME_PIN_NUMBER = "PinNumber";
 
     @Override
     public void start(BundleContext bundleContext) throws Exception {
-        pinProviders = new ArrayList<PinProviderConsole>();
 
         for(AvailableGPIO availableGPIO : AvailableGPIO.values()){
             Dictionary<String, String> props = new Hashtable<String, String>();
@@ -33,6 +30,6 @@ public class Activator implements BundleActivator {
 
     @Override
     public void stop(BundleContext bundleContext) throws Exception {
-        pinProviders = null;
+        // called on bundle stop
     }
 }

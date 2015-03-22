@@ -22,7 +22,6 @@
         <module>PinProvider</module>
         <module>CoalBurnerModule</module>
         <module>ConsoleOutputPinProvider</module>
-        <module>JFramePinProvider</module>
         <module>MeasureService</module>
         <module>GuiTemperatureMeasureProvider</module>
         <module>MeasurePeriodicConsumer</module>
