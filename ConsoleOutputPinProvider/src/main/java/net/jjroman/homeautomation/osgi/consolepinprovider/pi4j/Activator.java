@@ -21,7 +21,7 @@ public class Activator implements BundleActivator {
     public void start(BundleContext bundleContext) throws Exception {
 
         for(AvailableGPIO availableGPIO : AvailableGPIO.values()){
-            Dictionary<String, String> props = new Hashtable<>();
+            Dictionary<String, String> props = new Hashtable<String, String>();
             props.put(PROPERTY_NAME_PIN_NUMBER, String.valueOf(availableGPIO.getPinNumber()));
             bundleContext.registerService(
                     IGPIOPin.class.getName(), new PinProviderConsole(availableGPIO), props);
