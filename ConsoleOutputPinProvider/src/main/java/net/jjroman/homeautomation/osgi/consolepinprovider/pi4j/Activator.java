@@ -15,7 +15,7 @@ import java.util.Hashtable;
 public class Activator implements BundleActivator {
 
 
-    private final static String PROPERTY_NAME_PIN_NUMBER = "PinNumber";
+    private static final String PROPERTY_NAME_PIN_NUMBER = "PinNumber";
 
     @Override
     public void start(BundleContext bundleContext) throws Exception {

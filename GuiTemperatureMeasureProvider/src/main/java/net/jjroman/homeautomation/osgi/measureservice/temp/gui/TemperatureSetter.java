@@ -12,6 +12,7 @@ import javax.swing.*;
 public class TemperatureSetter implements DoubleMeasure {
     private JTextField textField1;
 
+    @Override
     public double getValue() {
         double retval = 0;
         if(textField1 != null){

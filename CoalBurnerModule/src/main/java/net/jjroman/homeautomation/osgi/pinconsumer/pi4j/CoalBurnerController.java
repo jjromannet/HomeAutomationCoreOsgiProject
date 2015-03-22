@@ -131,13 +131,11 @@ public class CoalBurnerController implements Runnable{
                     if (value > currentTemp)
                         currentState = currentState.toggle();
                 break;
-
                 case ACTIVE:
                     value = Double.parseDouble(configService.getConfigValueByNamespaceAndKey(CONFIG_NAMESPACE, CONFIG_GOTO_STANDBY_TEMP));
                     if (value < currentTemp)
                         currentState = currentState.toggle();
                 break;
-
                 default:
                     throw new UnsupportedOperationException("Unknown current state");
         }

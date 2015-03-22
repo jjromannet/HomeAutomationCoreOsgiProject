@@ -12,6 +12,7 @@ import org.osgi.service.log.LogService;
 import java.util.Properties;
 
 /**
+ * Activator using Felix Dependency Manager for CoalBurnerController
  * Created by Jan on 07/03/2015.
  */
 public class Activator extends DependencyActivatorBase {
@@ -22,7 +23,6 @@ public class Activator extends DependencyActivatorBase {
         Properties properties = new Properties();
         properties.put(CommandProcessor.COMMAND_SCOPE, "coalburner");
         properties.put(CommandProcessor.COMMAND_FUNCTION, new String[]{"start", "stop"});
-         //       "setDispenserOn", "setDispenserOff"});
 
         dependencyManager.add(createComponent()
                         .setInterface(Object.class.getName(), properties)

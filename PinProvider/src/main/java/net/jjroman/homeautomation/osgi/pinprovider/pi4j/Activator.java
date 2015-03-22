@@ -16,13 +16,14 @@ import java.util.Hashtable;
 import java.util.List;
 
 /**
+ * Activator for PinProvider service using Pi4J. FOr use in target environment.
  * Created by Jan on 27/02/2015.
  */
 public class Activator implements BundleActivator{
 
     private List<PinProviderPi4J> pinProviders;
 
-    private final static String PROPERTY_NAME_PIN_NUMBER = "PinNumber";
+    private static final String PROPERTY_NAME_PIN_NUMBER = "PinNumber";
 
     @Override
     public void start(BundleContext bundleContext) throws Exception {
@@ -56,8 +57,8 @@ public class Activator implements BundleActivator{
                 return RaspiPin.GPIO_02;
             case PIN_03:
                 return RaspiPin.GPIO_03;
+            default:
+                throw new UnsupportedOperationException("Pin not available");
         }
-        // TODO ERROR trowing
-        return null;
     }
 }

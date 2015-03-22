@@ -8,6 +8,7 @@ import net.jjroman.homeautomation.osgi.pinservice.api.HiLoPinState;
 import net.jjroman.homeautomation.osgi.pinservice.api.IGPIOPin;
 
 /**
+ * PinProviderPi4J Acivator
  * Created by Jan on 27/02/2015.
  */
 public class PinProviderPi4J implements IGPIOPin{
@@ -43,7 +44,6 @@ public class PinProviderPi4J implements IGPIOPin{
             default:
                 return HiLoPinState.LOW;
         }
-        //throw new Exception("Unknown PinState");
     }
 
     private PinState translate(HiLoPinState hiLoPinState){
