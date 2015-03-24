@@ -71,6 +71,7 @@
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
+            <version>${maven-compiler-plugin-version}</version>
             <configuration>
                 <source>1.8</source>
                 <target>1.8</target>
@@ -86,7 +87,7 @@
                     <Private-Package>
                         net.jjroman.homeautomation.osgi.pinconsumer.pi4j
                     </Private-Package>
-                    <Bundle-SymbolicName>${pom.artifactId}</Bundle-SymbolicName>
+                    <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                     <Bundle-Activator>
                         net.jjroman.homeautomation.osgi.pinconsumer.pi4j.Activator
                     </Bundle-Activator>
