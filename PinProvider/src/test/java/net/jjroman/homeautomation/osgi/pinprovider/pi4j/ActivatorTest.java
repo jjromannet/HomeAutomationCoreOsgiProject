@@ -1,7 +1,7 @@
 package net.jjroman.homeautomation.osgi.pinprovider.pi4j;
 
+import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.Pin;
-import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.io.gpio.test.MockGpioFactory;
 import com.pi4j.io.gpio.test.MockPin;
 import net.jjroman.homeautomation.osgi.pinservice.api.AvailableGPIO;
@@ -19,6 +19,7 @@ import java.util.HashSet;
 import static org.junit.Assert.*;
 
 /**
+ * Testing Activator class
  * Created by Jan on 24/03/2015.
  */
 public class ActivatorTest {
@@ -33,12 +34,12 @@ public class ActivatorTest {
         ServiceReference[] serviceReferences = bundleContext.getServiceReferences(IGPIOPin.class.getName(), "");
 
         for(ServiceReference serviceReference : serviceReferences){
-            assertTrue("Registered Services should have PinNumber property set", new HashSet<String>(Arrays.asList(serviceReference.getPropertyKeys())).contains("PinNumber"));
+            assertTrue("Registered Services should have PinNumber property set", new HashSet<>(Arrays.asList(serviceReference.getPropertyKeys())).contains("PinNumber"));
         }
     }
 
     @Test
-    public void thereIsServiceRegisteredForEachAvailablePin() throws Exception{
+     public void thereIsServiceRegisteredForEachAvailablePin() throws Exception{
         BundleContext bundleContext = MockOsgi.newBundleContext();
         Activator a = new Activator(MockGpioFactory.getInstance(), new MockPinTranslator() );
         a.start(bundleContext);
@@ -48,10 +49,22 @@ public class ActivatorTest {
                     bundleContext.getServiceReferences(IGPIOPin.class.getName(),
                             String.format("(PinNumber=%d)", availableGPIO.getPinNumber()));
             assertNotNull("There is service with given pin number", serviceReferences);
-            //TODO .. why it is not filtering the services ...
-            // maybe it is limitation of mock?
-            //assertEquals("There is service with given pin number", 1, serviceReferences.length);
+            //For some reason services are not filtered
+            // maybe it is limitation of mock? So I am just checkin is array not empty
+            assertNotEquals("There is service with given pin number", 0, serviceReferences.length);
         }
+    }
+
+    @Test
+    public void pinsUnprovisionedOnStop() throws Exception{
+        BundleContext bundleContext = MockOsgi.newBundleContext();
+        GpioController gpioController = MockGpioFactory.getInstance();
+        Activator a = new Activator(gpioController, new MockPinTranslator() );
+        a.start(bundleContext);
+
+        a.stop(bundleContext);
+        assertFalse("After stop all pins should be unprovisioned", gpioController.getProvisionedPins().isEmpty());
+
     }
 
     private static class MockPinTranslator implements PinTranslator{
