@@ -2,8 +2,6 @@ package net.jjroman.homeautomation.osgi.pinprovider.pi4j;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
-import com.pi4j.io.gpio.Pin;
-import com.pi4j.io.gpio.RaspiPin;
 import net.jjroman.homeautomation.osgi.pinservice.api.AvailableGPIO;
 import net.jjroman.homeautomation.osgi.pinservice.api.HiLoPinState;
 import net.jjroman.homeautomation.osgi.pinservice.api.IGPIOPin;
@@ -29,7 +27,7 @@ public class Activator implements BundleActivator {
     private final PinTranslator pinTranslator;
 
     public Activator() {
-        this(GpioFactory.getInstance(), new RaspiPinTranlator());
+        this(GpioFactory.getInstance(), new RaspiPinTranslator());
     }
 
     public Activator(GpioController gpioController, PinTranslator pinTranslator) {
@@ -40,11 +38,11 @@ public class Activator implements BundleActivator {
 
     @Override
     public void start(BundleContext bundleContext) throws Exception {
-        pinProviders = new ArrayList<PinProviderPi4J>();
+        pinProviders = new ArrayList<>();
 
         for (AvailableGPIO availableGPIO : AvailableGPIO.values()) {
             PinProviderPi4J pinProviderPi4J = new PinProviderPi4J(gpioController, HiLoPinState.LOW, pinTranslator.translate(availableGPIO), availableGPIO.name());
-            Dictionary<String, String> props = new Hashtable<String, String>();
+            Dictionary<String, String> props = new Hashtable<>();
             props.put(PROPERTY_NAME_PIN_NUMBER, String.valueOf(availableGPIO.getPinNumber()));
             bundleContext.registerService(
                     IGPIOPin.class.getName(), pinProviderPi4J, props);
@@ -57,24 +55,5 @@ public class Activator implements BundleActivator {
             pinProviderPi4J.dispose();
         }
         pinProviders = null;
-    }
-
-    private static class RaspiPinTranlator implements PinTranslator {
-
-        @Override
-        public Pin translate(AvailableGPIO availableGPIO) {
-            switch (availableGPIO) {
-                case PIN_00:
-                    return RaspiPin.GPIO_00;
-                case PIN_01:
-                    return RaspiPin.GPIO_01;
-                case PIN_02:
-                    return RaspiPin.GPIO_02;
-                case PIN_03:
-                    return RaspiPin.GPIO_03;
-                default:
-                    throw new UnsupportedOperationException("Pin not available");
-            }
-        }
     }
 }
