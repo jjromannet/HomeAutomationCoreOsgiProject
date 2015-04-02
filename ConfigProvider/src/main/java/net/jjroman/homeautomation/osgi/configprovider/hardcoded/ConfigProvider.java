@@ -19,6 +19,11 @@ public class ConfigProvider implements ConfigService {
         coalBurnerProperties.setProperty("goto.standby.temperature", "65.00");
         Map<String, Properties> tmpRepo = new HashMap<String, Properties>();
         tmpRepo.put("coalburner", coalBurnerProperties);
+
+        Properties system = new Properties();
+        system.put("test", "test");
+        tmpRepo.put("system", system);
+        tmpRepo.put("system-null", null);
         this.repo = Collections.unmodifiableMap(tmpRepo);
     }
 
