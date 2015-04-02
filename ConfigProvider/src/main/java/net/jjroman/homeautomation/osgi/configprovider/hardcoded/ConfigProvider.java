@@ -22,7 +22,7 @@ public class ConfigProvider implements ConfigService {
 
         Properties system = new Properties();
         system.put("test", "test");
-        tmpRepo.put("system", system);
+        tmpRepo.put("system-test", system);
         tmpRepo.put("system-null", null);
         this.repo = Collections.unmodifiableMap(tmpRepo);
     }
@@ -32,7 +32,7 @@ public class ConfigProvider implements ConfigService {
         if(namespace == null || key == null) {
             return null;
         }
-        if(repo.containsKey(namespace) && repo.get(namespace).containsKey(key) ){
+        if(repo.containsKey(namespace) && repo.get(namespace) != null && repo.get(namespace).containsKey(key) ){
             return repo.get(namespace).getProperty(key);
         }
         return null;

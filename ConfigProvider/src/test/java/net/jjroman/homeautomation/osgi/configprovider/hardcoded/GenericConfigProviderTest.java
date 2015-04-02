@@ -9,7 +9,7 @@ import static org.junit.Assert.*;
  * //TODO package it externally for reuse
  * Created by Jan on 02/04/2015.
  */
-public class GenericConfigProvider {
+public class GenericConfigProviderTest {
 
     @Test
     public void returnNullWhenNullInputProvided(){
@@ -28,14 +28,14 @@ public class GenericConfigProvider {
     @Test
     public void returnNullWhenThereIsNoSuchKey(){
         ConfigService cs = new ConfigProvider();
-        assertNull("Null should be returned when there is no such key in existing context", cs.getConfigValueByNamespaceAndKey("system", "key"));
+        assertNull("Null should be returned when there is no such key in existing context", cs.getConfigValueByNamespaceAndKey("system-test", "no-such-key"));
         assertNull("Null should be returned when there is no such key in existing context", cs.getConfigValueByNamespaceAndKey("system-null", "key"));
     }
 
     @Test
     public void systemContextProvidedAndTestKeyExists(){
         ConfigService cs = new ConfigProvider();
-        assertEquals("There should be system context and test=test key - value pair", cs.getConfigValueByNamespaceAndKey("system-test", "test"), "test");
+        assertEquals("There should be system context and test=test key - value pair", "test", cs.getConfigValueByNamespaceAndKey("system-test", "test"));
     }
 
 }
