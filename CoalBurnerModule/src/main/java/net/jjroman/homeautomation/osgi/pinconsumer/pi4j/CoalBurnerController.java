@@ -28,6 +28,7 @@ public class CoalBurnerController implements Runnable{
     private Thread thread;
 
     private static final String CONFIG_NAMESPACE = "coalburner";
+    // TODO create config enum and enum set of required configurations
     public static final String CONFIG_GOTO_ACTIVE_TEMP= "goto.active.temperature";
     public static final String CONFIG_GOTO_STANDBY_TEMP = "goto.standby.temperature";
 
