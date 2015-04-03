@@ -111,19 +111,18 @@ public class SimpleFrame extends JFrame implements DoubleMeasure, ChangeListener
         // required by slider
     }
 
+    private LogService getLog() {
+        if(bundleContext == null) return null;
+        ServiceReference logRef = bundleContext
+                .getServiceReference(LogService.class.getName());
+        if (logRef != null) return (LogService) bundleContext
+                .getService(logRef);
+        return null;
+    }
+
     private void logService(int level, String mesage, Throwable th){
-        LogService logService = null;
-        try {
-            ServiceReference[] refs = bundleContext.getServiceReferences(LogService.class.getName(), "");
-            if (refs != null && refs.length > 0) {
-                Object service = bundleContext.getService(refs[0]);
-                if (LogService.class.isAssignableFrom(service.getClass())) {
-                    logService = (LogService) service;
-                }
-            }
-        }catch (InvalidSyntaxException ise){
-            logOnStdErr(ise);
-        }
+        LogService logService = getLog();
+
         if(logService == null){
             System.err.print(String.format("Severity: %d, message: %s", level, mesage));
             if(th != null){

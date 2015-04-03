@@ -6,12 +6,19 @@ import net.jjroman.homeautomation.osgi.pinservice.api.HiLoPinState;
 import net.jjroman.homeautomation.osgi.pinservice.api.IGPIOPin;
 import org.osgi.service.log.LogService;
 
+import java.sql.Time;
+import java.util.concurrent.TimeUnit;
+
 /**
  * Main Logic for controlling Coal burner is defined here.
  *
  * Coal burner have two engines
  * 1) Fan - which blows air into coal burning chamber
- * 2) Dispenser - which dispense coal
+ * 2) Dispenser - which dispense
+ * TODO: shutdown hooks: http://stackoverflow.com/questions/2975248/java-how-to-handle-a-sigterm
+ *       http://stackoverflow.com/questions/4911745/if-i-type-ctrl-c-on-the-command-line-will-the-finally-block-in-java-still-execu
+ *
+ *       http://programmers.stackexchange.com/questions/185953/junit-testing-in-multithread-application
  *
  * Created by Jan on 14/03/2015.
  */
@@ -73,7 +80,7 @@ public class CoalBurnerController implements Runnable{
     @Override
     public void run() {
         try {
-            final TimeUnit defaultTimeUnit = TimeUnit.SECOND;
+            final TimeUnit defaultTimeUnit = TimeUnit.SECONDS;
         // CONFIG CONTEXT -> Config KEY
             final DispensingCycleDescriptor active = new DispensingCycleDescriptor(1,4,0, defaultTimeUnit);
             final DispensingCycleDescriptor standby = new DispensingCycleDescriptor(5,4,10, defaultTimeUnit);
@@ -98,7 +105,7 @@ public class CoalBurnerController implements Runnable{
                             executeCycle(standby);
                             timeFromLastActive = 0;
                         }
-                        Thread.sleep((long)standbyPauseUnit * defaultTimeUnit.getMilisecondMultiplier());
+                        defaultTimeUnit.sleep((long)standbyPauseUnit);
                     }
                     // ACTIVE ...
                     // START FAN
@@ -125,17 +132,25 @@ public class CoalBurnerController implements Runnable{
 
     private void updateStatus(){
         double currentTemp = coalBurnerWaterTank.getValue();
+        logService.log(LogService.LOG_DEBUG, String.format("Curent coal burner status %s ", currentState));
+        logService.log(LogService.LOG_DEBUG, String.format("Curent water tank temperature %f ", currentTemp));
         double value;
         switch (currentState){
                 case STANDBY:
                     value = Double.parseDouble(configService.getConfigValueByNamespaceAndKey(CONFIG_NAMESPACE, CONFIG_GOTO_ACTIVE_TEMP));
-                    if (value > currentTemp)
+                    logService.log(LogService.LOG_DEBUG, String.format("Temperature to go active: %f ", value));
+                    if (value > currentTemp) {
                         currentState = currentState.toggle();
+                        logService.log(LogService.LOG_DEBUG, String.format("Current state updated: %s ", currentState));
+                    }
                 break;
                 case ACTIVE:
                     value = Double.parseDouble(configService.getConfigValueByNamespaceAndKey(CONFIG_NAMESPACE, CONFIG_GOTO_STANDBY_TEMP));
-                    if (value < currentTemp)
+                    logService.log(LogService.LOG_DEBUG, String.format("Temperature to go standby: %f ", value));
+                    if (value < currentTemp) {
                         currentState = currentState.toggle();
+                        logService.log(LogService.LOG_DEBUG, String.format("Current state updated: %s ", currentState));
+                    }
                 break;
                 default:
                     throw new UnsupportedOperationException("Unknown current state");
@@ -144,50 +159,36 @@ public class CoalBurnerController implements Runnable{
 
     private void executeCycle(DispensingCycleDescriptor dispensingCycleDescriptor) throws InterruptedException{
         fanPin.setState(HiLoPinState.HIGH);
-        Thread.sleep(dispensingCycleDescriptor.getFanHeadStartInMilis());
+        dispensingCycleDescriptor.sleepFanHeadStart();
         dispenserPin.setState(HiLoPinState.HIGH);
-        Thread.sleep(dispensingCycleDescriptor.getDispenserRunTimeInMilis());
+        dispensingCycleDescriptor.sleepDispenserRunTime();
         dispenserPin.setState(HiLoPinState.LOW);
-        Thread.sleep(dispensingCycleDescriptor.getFanDelayedStopInMilis());
-    }
-
-    private enum TimeUnit{
-        MILISECOND(1),
-        SECOND(1000),
-        MINUTE(60*1000),
-        HOUR(60*60*1000);
-
-        private final int milisecondMultiplier;
-        private TimeUnit(int milisecondMultiplier){
-            this.milisecondMultiplier = milisecondMultiplier;
-        }
-
-        public int getMilisecondMultiplier(){
-            return milisecondMultiplier;
-        }
+        dispensingCycleDescriptor.sleepFanDelayedStop();
     }
 
     private static class DispensingCycleDescriptor{
-        private final int fanHeadStart;
-        private final int dispenserRunTime;
-        private final int fanDelayedStop;
+        private final long fanHeadStart;
+        private final long dispenserRunTime;
+        private final long fanDelayedStop;
+        private final TimeUnit timeUnit;
 
-        public DispensingCycleDescriptor(int fanHeadStart, int dispenserRunTime, int fanDelayedStop, TimeUnit timeUnit) {
-            this.fanHeadStart = fanHeadStart * timeUnit.getMilisecondMultiplier();
-            this.dispenserRunTime = dispenserRunTime * timeUnit.getMilisecondMultiplier();
-            this.fanDelayedStop = fanDelayedStop * timeUnit.getMilisecondMultiplier();
+        public DispensingCycleDescriptor(long fanHeadStart, long dispenserRunTime, long fanDelayedStop, TimeUnit timeUnit) {
+            this.fanHeadStart = fanHeadStart;
+            this.dispenserRunTime = dispenserRunTime;
+            this.fanDelayedStop = fanDelayedStop;
+            this.timeUnit = timeUnit;
         }
 
-        public int getFanHeadStartInMilis() {
-            return fanHeadStart;
+        public void sleepFanHeadStart() throws InterruptedException{
+            timeUnit.sleep(fanHeadStart);
         }
 
-        public int getDispenserRunTimeInMilis() {
-            return dispenserRunTime;
+        public void sleepDispenserRunTime() throws InterruptedException{
+            timeUnit.sleep(dispenserRunTime);
         }
 
-        public int getFanDelayedStopInMilis() {
-            return fanDelayedStop;
+        public void sleepFanDelayedStop() throws InterruptedException{
+            timeUnit.sleep(fanDelayedStop);
         }
     }
 

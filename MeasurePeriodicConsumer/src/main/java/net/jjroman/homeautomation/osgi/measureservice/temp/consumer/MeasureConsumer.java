@@ -25,7 +25,7 @@ public class MeasureConsumer {
                 while(run.get()){
                     try {
                         Thread.sleep(1000);
-                        logService.log(LogService.LOG_INFO, String.format("Current Reading: %f%n", doubleMeasure.getValue()));
+                        logService.log(LogService.LOG_INFO, String.format("Current Reading: %f", doubleMeasure.getValue()));
                     } catch (InterruptedException e) {
                         run.set(false);
                         logService.log(LogService.LOG_WARNING, "forcibly interrupted", e);
