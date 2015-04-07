@@ -23,6 +23,7 @@
         <module>PinService</module>
         <module>PinProvider</module>
         <module>CoalBurnerModule</module>
+        <module>CoalBurnerModuleDS</module>
         <module>ConsoleOutputPinProvider</module>
         <module>MeasureService</module>
         <module>GuiTemperatureMeasureProvider</module>
