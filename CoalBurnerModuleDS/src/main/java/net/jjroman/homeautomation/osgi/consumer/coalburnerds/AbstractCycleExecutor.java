@@ -1,5 +1,6 @@
 package net.jjroman.homeautomation.osgi.consumer.coalburnerds;
 
+import net.jjroman.homeautomation.osgi.pinservice.api.HiLoPinState;
 import net.jjroman.homeautomation.osgi.pinservice.api.IGPIOPin;
 
 /**
@@ -7,11 +8,15 @@ import net.jjroman.homeautomation.osgi.pinservice.api.IGPIOPin;
  */
 public abstract class AbstractCycleExecutor implements CycleExecutor{
 
-    private final IGPIOPin fanPin;
-    private final IGPIOPin dispenserPin;
+    protected final IGPIOPin fanPin;
+    protected final IGPIOPin dispenserPin;
 
     public AbstractCycleExecutor(IGPIOPin fanPin, IGPIOPin dispenserPin) {
         this.fanPin = fanPin;
         this.dispenserPin = dispenserPin;
+    }
+    public void turnOff(){
+        fanPin.setState(HiLoPinState.LOW);
+        dispenserPin.setState(HiLoPinState.LOW);
     }
 }

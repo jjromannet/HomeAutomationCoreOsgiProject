@@ -17,7 +17,7 @@ public class CoalBurnerStateCounterTest {
     CoalBurnerControlLogic coalBurnerControlLogic = new CoalBurnerControlLogic();
 
     @Test
-    public void testResetCounterWhenActiveState(){
+    public void testResetCounterWhenActiveState() throws InterruptedException {
         long counter = Math.round(Long.MAX_VALUE * Math.random());
         long expected = 0;
         assertEquals("Counter should be set to 0 when state is ACTIVE",
@@ -27,7 +27,7 @@ public class CoalBurnerStateCounterTest {
     }
 
     @Test
-    public void testCounterShouldBeIncrementedWhenStandbyAndLessThenThreshold(){
+    public void testCounterShouldBeIncrementedWhenStandbyAndLessThenThreshold() throws InterruptedException {
         long maxThreshold = Math.round(Integer.MAX_VALUE * Math.random());
         long counter = Math.round(Integer.MAX_VALUE * Math.random()) % (maxThreshold - 1);
         long expected = counter + 1;
@@ -41,7 +41,7 @@ public class CoalBurnerStateCounterTest {
     }
 
     @Test
-    public void testCounterShouldBeResetWhenStandbyAndMoreThenThreshold(){
+    public void testCounterShouldBeResetWhenStandbyAndMoreThenThreshold() throws InterruptedException {
         long maxThreshold = Math.round(Integer.MAX_VALUE * Math.random());
         long counter = Math.round(Integer.MAX_VALUE * Math.random()) + maxThreshold;
         long expected = 0;

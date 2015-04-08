@@ -7,13 +7,22 @@ package net.jjroman.homeautomation.osgi.consumer.coalburnerds;
 class MockCycleExecutor implements CycleExecutor{
 
     private boolean cycleExecuted = false;
+    private boolean cycleTurnedOff = false;
 
     @Override
     public void executeCycle(EnvironmentImmutableSnapshot environmentSnapshot) {
         cycleExecuted = true;
     }
 
+    @Override
+    public void turnOff() {
+        cycleTurnedOff = true;
+    }
+
     public boolean isCycleExecuted() {
         return cycleExecuted;
+    }
+    public boolean isCycleTurnedOff() {
+        return cycleTurnedOff;
     }
 }

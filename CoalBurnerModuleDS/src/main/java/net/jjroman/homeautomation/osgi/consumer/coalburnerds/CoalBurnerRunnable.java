@@ -1,6 +1,7 @@
 package net.jjroman.homeautomation.osgi.consumer.coalburnerds;
 
 /**
+ * Worker thread to glue control logic with cycle executor
  * Created by Jan on 06/04/2015.
  */
 class CoalBurnerRunnable implements Runnable {
@@ -22,7 +23,11 @@ class CoalBurnerRunnable implements Runnable {
             CoalBurnerControlLogic coalBurnerControlLogic = new CoalBurnerControlLogic();
 
             currentState = coalBurnerControlLogic.calculateCurrentState(currentState, environmentSnapshot);
-            standbyCounter = coalBurnerControlLogic.executeCycle(currentState, standbyCounter, environmentSnapshot, standbyCycleExecutor, activeCycleExecutor);
+            try {
+                standbyCounter = coalBurnerControlLogic.executeCycle(currentState, standbyCounter, environmentSnapshot, standbyCycleExecutor, activeCycleExecutor);
+            }catch (InterruptedException ie){
+                ie.printStackTrace(System.out);
+            }
 
     }
 }
