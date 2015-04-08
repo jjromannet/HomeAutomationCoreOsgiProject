@@ -17,11 +17,11 @@ public class StandbyCycleExecutor extends AbstractCycleExecutor {
     public void executeCycle(EnvironmentImmutableSnapshot environmentSnapshot) throws InterruptedException {
         try{
             fanPin.setState(HiLoPinState.LOW);
-            TimeUnit.SECONDS.wait(environmentSnapshot.getActiveFanHeadStart());
+            TimeUnit.SECONDS.sleep(environmentSnapshot.getActiveFanHeadStart());
             dispenserPin.setState(HiLoPinState.HIGH);
-            TimeUnit.SECONDS.wait(environmentSnapshot.getActiveDispenserRunTime());
+            TimeUnit.SECONDS.sleep(environmentSnapshot.getActiveDispenserRunTime());
             dispenserPin.setState(HiLoPinState.LOW);
-            TimeUnit.SECONDS.wait(environmentSnapshot.getActiveFanAfterDispensedTime());
+            TimeUnit.SECONDS.sleep(environmentSnapshot.getActiveFanAfterDispensedTime());
         }finally {
             fanPin.setState(HiLoPinState.LOW);
             dispenserPin.setState(HiLoPinState.LOW);

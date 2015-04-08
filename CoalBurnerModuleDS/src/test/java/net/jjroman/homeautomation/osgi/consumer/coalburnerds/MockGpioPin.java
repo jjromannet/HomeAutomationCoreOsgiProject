@@ -3,6 +3,7 @@ package net.jjroman.homeautomation.osgi.consumer.coalburnerds;
 import net.jjroman.homeautomation.osgi.pinservice.api.HiLoPinState;
 import net.jjroman.homeautomation.osgi.pinservice.api.IGPIOPin;
 
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -27,7 +28,12 @@ public class MockGpioPin implements IGPIOPin {
     }
 
     Map.Entry<Long, HiLoPinState> getStateChangeLogEntry(int index){
-        return null;
-        //stateChangeLog.entrySet().iterator().
+        int i =0;
+        Map.Entry<Long, HiLoPinState> currentElement = null;
+        Iterator<Map.Entry<Long, HiLoPinState>> iterator = stateChangeLog.entrySet().iterator();
+        while(i++ <= index && iterator.hasNext()){
+            currentElement = iterator.next();
+        }
+        return currentElement;
     }
 }

@@ -15,12 +15,12 @@ import static org.junit.Assert.*;
  */
 public class CoalBurnerCycleCallSequenceTest {
 
-    @Ignore
+    @Test
     public void testActiveSequence() throws InterruptedException {
         // prepare environment snapshot
-        long fanHeadStart = 0;
-        long fanBehind = 0;
-        long dispenserRunTime = 0;
+        long fanHeadStart = 1;
+        long fanBehind = 2;
+        long dispenserRunTime = 3;
         EnvironmentImmutableSnapshot environmentImmutableSnapshot = new EnvironmentImmutableSnapshotBasic(0,0,0,0,fanBehind,0,0,0,fanHeadStart,dispenserRunTime);
 
         MockGpioPin fan = new MockGpioPin();
@@ -39,7 +39,7 @@ public class CoalBurnerCycleCallSequenceTest {
         //in millis.
         long fanHeadStartReceived = Math.round( (dispenserStartTime - fanStartTime)/1000 );
         long fanTotalRunTimeReceived = Math.round( (executionFinished - fanStartTime)/1000 );
-        long dispenserRunTimeReceived = Math.round((dispenserStartTime - dispenserSecondStateChange.getKey()) / 1000);
+        long dispenserRunTimeReceived = Math.round((dispenserSecondStateChange.getKey() - dispenserStartTime) / 1000);
 
         assertEquals("First call on fan set state to high", HiLoPinState.HIGH, fanFirstStateChange.getValue());
         assertEquals("First call on dispenser set state to high", HiLoPinState.HIGH, dispenserFirstStateChange.getValue());
