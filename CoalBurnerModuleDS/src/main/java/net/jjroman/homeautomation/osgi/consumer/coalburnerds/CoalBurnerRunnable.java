@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
  * Created by Jan on 06/04/2015.
  */
 class CoalBurnerRunnable implements Runnable {
-    Logger logger = LoggerFactory.getLogger(CoalBurnerRunnable.class);
+    static private final Logger LOGGER = LoggerFactory.getLogger(CoalBurnerRunnable.class);
 
     volatile CoalBurnerState currentState = CoalBurnerState.STANDBY;
     volatile long standbyCounter = 0;
@@ -25,7 +25,7 @@ class CoalBurnerRunnable implements Runnable {
     public void run() {
 
         EnvironmentImmutableSnapshot environmentSnapshot =
-                new SnapshotBuilder()
+                new Snapshot.Builder()
                         .setStandbyTimeout(120)
                         .build();
             CoalBurnerControlLogic coalBurnerControlLogic = new CoalBurnerControlLogic();
@@ -34,7 +34,7 @@ class CoalBurnerRunnable implements Runnable {
             try {
                 standbyCounter = coalBurnerControlLogic.executeCycle(currentState, standbyCounter, environmentSnapshot, standbyCycleExecutor, activeCycleExecutor);
             }catch (InterruptedException ie){
-                logger.warn("Thread interrupted", ie);
+                LOGGER.warn("Thread interrupted", ie);
                 Thread.currentThread().interrupt();
             }finally {
                 standbyCycleExecutor.turnOff();

@@ -33,7 +33,7 @@ public class CoalBurnerCycleExecutedTest {
         long currentCounter = counter - Math.round(counter * Math.random());
 
         EnvironmentImmutableSnapshot environmentImmutableSnapshot =
-                new SnapshotBuilder()
+                new Snapshot.Builder()
                         .setStandbyTimeout(counter)
                     .build();
 
@@ -53,7 +53,7 @@ public class CoalBurnerCycleExecutedTest {
         long currentCounter = counter + Math.round(Integer.MAX_VALUE * Math.random());
 
         EnvironmentImmutableSnapshot environmentImmutableSnapshot =
-                new SnapshotBuilder()
+                new Snapshot.Builder()
                         .setStandbyTimeout(counter)
                         .build();
 

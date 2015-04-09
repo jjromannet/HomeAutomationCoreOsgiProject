@@ -20,7 +20,7 @@ public class SimpleFrame extends JFrame implements DoubleMeasure, ChangeListener
 
     private JSlider slider = null;
 
-    private final static Logger logger = LoggerFactory.getLogger(SimpleFrame.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(SimpleFrame.class.getName());
 
     /**
      * Area where the result is displayed.
@@ -133,16 +133,16 @@ public class SimpleFrame extends JFrame implements DoubleMeasure, ChangeListener
         if(logService == null){
             switch (level){
                 case LogService.LOG_ERROR:
-                    logger.error(mesage, th);
+                    LOGGER.error(mesage, th);
                     break;
                 case LogService.LOG_WARNING:
-                    logger.warn(mesage, th);
+                    LOGGER.warn(mesage, th);
                     break;
                 case LogService.LOG_INFO:
-                    logger.info(mesage, th);
+                    LOGGER.info(mesage, th);
                     break;
                 default:
-                    logger.debug(mesage,th);
+                    LOGGER.debug(mesage,th);
             }
         }else{
             if(th == null){

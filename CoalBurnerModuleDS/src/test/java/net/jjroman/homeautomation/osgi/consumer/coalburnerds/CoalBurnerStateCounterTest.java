@@ -33,7 +33,7 @@ public class CoalBurnerStateCounterTest {
         long expected = counter + 1;
 
         EnvironmentImmutableSnapshot environmentImmutableSnapshot =
-                new SnapshotBuilder()
+                new Snapshot.Builder()
                     .setStandbyTimeout(maxThreshold)
                 .build();
 
@@ -50,7 +50,7 @@ public class CoalBurnerStateCounterTest {
         long expected = 0;
 
         EnvironmentImmutableSnapshot environmentImmutableSnapshot =
-                new SnapshotBuilder()
+                new Snapshot.Builder()
                         .setStandbyTimeout(maxThreshold)
                     .build();
 

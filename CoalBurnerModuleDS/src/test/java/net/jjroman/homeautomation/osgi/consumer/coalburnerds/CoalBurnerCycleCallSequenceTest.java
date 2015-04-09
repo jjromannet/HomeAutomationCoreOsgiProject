@@ -22,7 +22,7 @@ public class CoalBurnerCycleCallSequenceTest {
         long fanBehind = 2;
         long dispenserRunTime = 3;
         EnvironmentImmutableSnapshot environmentImmutableSnapshot =
-                new SnapshotBuilder()
+                new Snapshot.Builder()
                         .setActiveFanAfterDispensedTime(fanBehind)
                         .setActiveFanHeadStart(fanHeadStart)
                         .setActiveDispenserRunTime(dispenserRunTime)

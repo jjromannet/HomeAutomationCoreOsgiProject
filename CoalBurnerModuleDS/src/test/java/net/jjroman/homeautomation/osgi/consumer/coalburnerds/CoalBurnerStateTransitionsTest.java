@@ -79,7 +79,7 @@ public class CoalBurnerStateTransitionsTest {
         final double maxActiveTemp = 69.9d;
 
         return
-                new SnapshotBuilder()
+                new Snapshot.Builder()
                         .setWaterTankCurrentTemperature(currentTemp)
                         .setWaterTankActiveMaxTemperature(maxActiveTemp)
                         .setWaterTankStandbyMinTemperature(minStandbyTemp)
