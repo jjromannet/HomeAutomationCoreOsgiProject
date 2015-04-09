@@ -78,6 +78,11 @@ public class CoalBurnerStateTransitionsTest {
         final double minStandbyTemp = 50.0d;
         final double maxActiveTemp = 69.9d;
 
-        return new EnvironmentImmutableSnapshotBasic(0,0,0,0,0,currentTemp,maxActiveTemp,minStandbyTemp,0,0);
+        return
+                new SnapshotBuilder()
+                        .setWaterTankCurrentTemperature(currentTemp)
+                        .setWaterTankActiveMaxTemperature(maxActiveTemp)
+                        .setWaterTankStandbyMinTemperature(minStandbyTemp)
+                .build();
     }
 }

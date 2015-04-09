@@ -32,7 +32,10 @@ public class CoalBurnerStateCounterTest {
         long counter = Math.round(Integer.MAX_VALUE * Math.random()) % (maxThreshold - 1);
         long expected = counter + 1;
 
-        EnvironmentImmutableSnapshot environmentImmutableSnapshot = new EnvironmentImmutableSnapshotBasic(maxThreshold, 0,0,0,0,0,0,0,0,0);
+        EnvironmentImmutableSnapshot environmentImmutableSnapshot =
+                new SnapshotBuilder()
+                    .setStandbyTimeout(maxThreshold)
+                .build();
 
         assertEquals(String.format("Counter (%d) should be incremented (%d) when state is STANDBY and max threshold (%d)", counter, expected, maxThreshold),
                 expected,
@@ -46,7 +49,10 @@ public class CoalBurnerStateCounterTest {
         long counter = Math.round(Integer.MAX_VALUE * Math.random()) + maxThreshold;
         long expected = 0;
 
-        EnvironmentImmutableSnapshot environmentImmutableSnapshot = new EnvironmentImmutableSnapshotBasic(maxThreshold, 0,0,0,0,0,0,0,0,0);
+        EnvironmentImmutableSnapshot environmentImmutableSnapshot =
+                new SnapshotBuilder()
+                        .setStandbyTimeout(maxThreshold)
+                    .build();
 
         assertEquals(String.format("Counter (%d) should be incremented (%d) when state is STANDBY",counter, expected),
                 expected,

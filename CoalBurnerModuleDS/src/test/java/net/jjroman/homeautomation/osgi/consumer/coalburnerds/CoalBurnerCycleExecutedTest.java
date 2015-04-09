@@ -32,7 +32,10 @@ public class CoalBurnerCycleExecutedTest {
         long counter = Math.round(Long.MAX_VALUE * Math.random());
         long currentCounter = counter - Math.round(counter * Math.random());
 
-        EnvironmentImmutableSnapshot environmentImmutableSnapshot = new EnvironmentImmutableSnapshotBasic(counter, 0,0,0,0,0,0,0,0,0);
+        EnvironmentImmutableSnapshot environmentImmutableSnapshot =
+                new SnapshotBuilder()
+                        .setStandbyTimeout(counter)
+                    .build();
 
         MockCycleExecutor activeCycleExecutor = new MockCycleExecutor();
         MockCycleExecutor standbyCycleExecutor = new MockCycleExecutor();
@@ -49,7 +52,10 @@ public class CoalBurnerCycleExecutedTest {
         long counter = Math.round(Integer.MAX_VALUE * Math.random());
         long currentCounter = counter + Math.round(Integer.MAX_VALUE * Math.random());
 
-        EnvironmentImmutableSnapshot environmentImmutableSnapshot = new EnvironmentImmutableSnapshotBasic(counter, 0,0,0,0,0,0,0,0,0);
+        EnvironmentImmutableSnapshot environmentImmutableSnapshot =
+                new SnapshotBuilder()
+                        .setStandbyTimeout(counter)
+                        .build();
 
         MockCycleExecutor activeCycleExecutor = new MockCycleExecutor();
         MockCycleExecutor standbyCycleExecutor = new MockCycleExecutor();

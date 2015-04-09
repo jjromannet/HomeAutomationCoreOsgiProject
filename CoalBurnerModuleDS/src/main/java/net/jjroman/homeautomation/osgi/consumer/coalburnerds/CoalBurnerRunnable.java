@@ -1,10 +1,15 @@
 package net.jjroman.homeautomation.osgi.consumer.coalburnerds;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Worker thread to glue control logic with cycle executor
  * Created by Jan on 06/04/2015.
  */
 class CoalBurnerRunnable implements Runnable {
+    Logger logger = LoggerFactory.getLogger(CoalBurnerRunnable.class);
+
     volatile CoalBurnerState currentState = CoalBurnerState.STANDBY;
     volatile long standbyCounter = 0;
 
@@ -18,14 +23,22 @@ class CoalBurnerRunnable implements Runnable {
 
     @Override
     public void run() {
-            EnvironmentImmutableSnapshot environmentSnapshot = new EnvironmentImmutableSnapshotBasic(120,0,0,0,0,0,0,0,0,0);
+
+        EnvironmentImmutableSnapshot environmentSnapshot =
+                new SnapshotBuilder()
+                        .setStandbyTimeout(120)
+                        .build();
             CoalBurnerControlLogic coalBurnerControlLogic = new CoalBurnerControlLogic();
 
             currentState = coalBurnerControlLogic.calculateCurrentState(currentState, environmentSnapshot);
             try {
                 standbyCounter = coalBurnerControlLogic.executeCycle(currentState, standbyCounter, environmentSnapshot, standbyCycleExecutor, activeCycleExecutor);
             }catch (InterruptedException ie){
-                ie.printStackTrace(System.out);
+                logger.warn("Thread interrupted", ie);
+                Thread.currentThread().interrupt();
+            }finally {
+                standbyCycleExecutor.turnOff();
+                activeCycleExecutor.turnOff();
             }
 
     }

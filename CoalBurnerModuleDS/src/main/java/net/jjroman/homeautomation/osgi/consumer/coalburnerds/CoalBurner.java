@@ -131,6 +131,7 @@ public class CoalBurner {
     private ScheduledExecutorService scheduledExecutorService;
     protected synchronized void activate(ComponentContext context)
     {
+        logService.log(LogService.LOG_DEBUG, context.toString());
         if(scheduledExecutorService != null){
             scheduledExecutorService.shutdownNow();
             throw new UnsupportedOperationException("scheduledExecutorService has not been shutdown and nulled");
@@ -145,6 +146,7 @@ public class CoalBurner {
 
     protected synchronized void deactivate(ComponentContext context)
     {
+        logService.log(LogService.LOG_DEBUG, context.toString());
         scheduledExecutorService.shutdown();
         logService.log(LogService.LOG_INFO, "Deactivating ... ");
     }

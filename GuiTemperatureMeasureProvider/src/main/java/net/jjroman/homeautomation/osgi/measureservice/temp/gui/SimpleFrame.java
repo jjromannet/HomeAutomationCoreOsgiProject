@@ -3,9 +3,10 @@ package net.jjroman.homeautomation.osgi.measureservice.temp.gui;
 import net.jjroman.homeautomation.osgi.measureservice.api.DoubleMeasure;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
-import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.log.LogService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -18,6 +19,8 @@ import javax.swing.event.ChangeListener;
 public class SimpleFrame extends JFrame implements DoubleMeasure, ChangeListener {
 
     private JSlider slider = null;
+
+    private final static Logger logger = LoggerFactory.getLogger(SimpleFrame.class.getName());
 
     /**
      * Area where the result is displayed.
@@ -112,11 +115,15 @@ public class SimpleFrame extends JFrame implements DoubleMeasure, ChangeListener
     }
 
     private LogService getLog() {
-        if(bundleContext == null) return null;
+        if(bundleContext == null) {
+            return null;
+        }
         ServiceReference logRef = bundleContext
                 .getServiceReference(LogService.class.getName());
-        if (logRef != null) return (LogService) bundleContext
-                .getService(logRef);
+        if (logRef != null) {
+            return (LogService) bundleContext
+                    .getService(logRef);
+        }
         return null;
     }
 
@@ -124,11 +131,19 @@ public class SimpleFrame extends JFrame implements DoubleMeasure, ChangeListener
         LogService logService = getLog();
 
         if(logService == null){
-            System.err.print(String.format("Severity: %d, message: %s", level, mesage));
-            if(th != null){
-                logOnStdErr(th);
+            switch (level){
+                case LogService.LOG_ERROR:
+                    logger.error(mesage, th);
+                    break;
+                case LogService.LOG_WARNING:
+                    logger.warn(mesage, th);
+                    break;
+                case LogService.LOG_INFO:
+                    logger.info(mesage, th);
+                    break;
+                default:
+                    logger.debug(mesage,th);
             }
-            System.err.println();
         }else{
             if(th == null){
                 logService.log(level, mesage);
@@ -137,15 +152,5 @@ public class SimpleFrame extends JFrame implements DoubleMeasure, ChangeListener
             }
         }
 
-    }
-    private void logOnStdErr(Throwable th){
-        if(th == null){
-            return;
-        }
-        System.err.println(th.getMessage());
-        for(StackTraceElement element: th.getStackTrace()){
-            System.err.print("\t");
-            System.err.println(element.toString());
-        }
     }
 }

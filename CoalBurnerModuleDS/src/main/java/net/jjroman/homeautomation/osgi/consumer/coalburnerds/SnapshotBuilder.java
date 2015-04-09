@@ -5,16 +5,16 @@ package net.jjroman.homeautomation.osgi.consumer.coalburnerds;
  */
 public class SnapshotBuilder {
 
-    private long standbyTimeout;
-    private long standbyFanHeadStart;
-    private long standbyDispenserRunTime;
-    private long standbyFanAfterDispensedTime;
-    private long activeFanAfterDispensedTime;
-    private double waterTankCurrentTemperature;
-    private double waterTankActiveMaxTemperature;
-    private double waterTankStandbyMinTemperature;
-    private long activeFanHeadStart;
-    private long activeDispenserRunTime;
+    private long standbyTimeout = 0 ;
+    private long standbyFanHeadStart = 0 ;
+    private long standbyDispenserRunTime = 0 ;
+    private long standbyFanAfterDispensedTime = 0 ;
+    private long activeFanAfterDispensedTime = 0 ;
+    private double waterTankCurrentTemperature = 0 ;
+    private double waterTankActiveMaxTemperature = 0 ;
+    private double waterTankStandbyMinTemperature = 0 ;
+    private long activeFanHeadStart = 0 ;
+    private long activeDispenserRunTime = 0 ;
 
     public SnapshotBuilder setStandbyTimeout(long standbyTimeout) {
         this.standbyTimeout = standbyTimeout;

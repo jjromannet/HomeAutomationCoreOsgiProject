@@ -21,7 +21,12 @@ public class CoalBurnerCycleCallSequenceTest {
         long fanHeadStart = 1;
         long fanBehind = 2;
         long dispenserRunTime = 3;
-        EnvironmentImmutableSnapshot environmentImmutableSnapshot = new EnvironmentImmutableSnapshotBasic(0,0,0,0,fanBehind,0,0,0,fanHeadStart,dispenserRunTime);
+        EnvironmentImmutableSnapshot environmentImmutableSnapshot =
+                new SnapshotBuilder()
+                        .setActiveFanAfterDispensedTime(fanBehind)
+                        .setActiveFanHeadStart(fanHeadStart)
+                        .setActiveDispenserRunTime(dispenserRunTime)
+                .build();
 
         MockGpioPin fan = new MockGpioPin();
         MockGpioPin dispenser = new MockGpioPin();
