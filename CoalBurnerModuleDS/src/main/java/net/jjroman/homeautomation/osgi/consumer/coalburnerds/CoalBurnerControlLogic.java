@@ -15,23 +15,23 @@ public class CoalBurnerControlLogic{
         return currentState;
     }
 
-    long executeCycle(CoalBurnerState coalBurnerState, long currentCounter, EnvironmentImmutableSnapshot environmentSnapshot, CycleExecutor standCycleExecutor, CycleExecutor activeCycleExecutor) throws InterruptedException {
-
+    long executeCycle(CoalBurnerState coalBurnerState, final long currentCounter, EnvironmentImmutableSnapshot environmentSnapshot, CycleExecutor standCycleExecutor, CycleExecutor activeCycleExecutor) throws InterruptedException {
+        long localCounter = currentCounter;
         if (CoalBurnerState.ACTIVE.equals(coalBurnerState)) {
             standCycleExecutor.turnOff();
-            currentCounter = 0;
+            localCounter = 0;
             activeCycleExecutor.executeCycle(environmentSnapshot);
         } else if (CoalBurnerState.STANDBY.equals(coalBurnerState)) {
             activeCycleExecutor.turnOff();
             //standby
-            currentCounter++;
+            localCounter++;
             if (currentCounter >= environmentSnapshot.getStandbyTimeout()) {
-                currentCounter = 0;
+                localCounter = 0;
                 standCycleExecutor.executeCycle(environmentSnapshot);
             }
         } else {
             throw new UnsupportedOperationException("CurrentState out of scope");
         }
-            return currentCounter;
+            return localCounter;
         }
 }

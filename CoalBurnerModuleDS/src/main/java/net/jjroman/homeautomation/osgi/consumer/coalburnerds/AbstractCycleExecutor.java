@@ -15,6 +15,8 @@ public abstract class AbstractCycleExecutor implements CycleExecutor{
         this.fanPin = fanPin;
         this.dispenserPin = dispenserPin;
     }
+
+    @Override
     public void turnOff(){
         fanPin.setState(HiLoPinState.LOW);
         dispenserPin.setState(HiLoPinState.LOW);

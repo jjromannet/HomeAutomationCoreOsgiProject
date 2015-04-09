@@ -6,7 +6,6 @@ package net.jjroman.homeautomation.osgi.consumer.coalburnerds;
  */
 class CoalBurnerRunnable implements Runnable {
     volatile CoalBurnerState currentState = CoalBurnerState.STANDBY;
-    //volatile boolean active = false;
     volatile long standbyCounter = 0;
 
     private final CycleExecutor standbyCycleExecutor;

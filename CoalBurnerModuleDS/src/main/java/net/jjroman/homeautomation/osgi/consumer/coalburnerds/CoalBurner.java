@@ -36,7 +36,11 @@ public class CoalBurner {
         this.fanPin = fanPin;
     }
     public void unsetFanPin(IGPIOPin fanPin) {
-        this.fanPin = null;
+        if(fanPin != null && fanPin.equals(this.fanPin)) {
+            this.fanPin = null;
+        }else{
+            logService.log(LogService.LOG_WARNING, "Skipping fan unset operation");
+        }
     }
 
     @Reference(
@@ -52,7 +56,11 @@ public class CoalBurner {
     }
 
     public void unsetDispenserPin(IGPIOPin dispenserPin) {
-        this.dispenserPin = null;
+        if(dispenserPin != null && dispenserPin.equals(this.dispenserPin)) {
+            this.dispenserPin = null;
+        }else{
+            logService.log(LogService.LOG_WARNING, "Skipping dispenser unset operation");
+        }
     }
 
 
@@ -68,7 +76,12 @@ public class CoalBurner {
         this.coalBurnerWaterTank = coalBurnerWaterTank;
     }
     public void unsetCoalBurnerWaterTank(DoubleMeasure coalBurnerWaterTank) {
-        this.coalBurnerWaterTank = null;
+        if(coalBurnerWaterTank != null && coalBurnerWaterTank.equals(this.coalBurnerWaterTank)) {
+            this.coalBurnerWaterTank = null;
+        }else{
+            logService.log(LogService.LOG_WARNING, "Skipping coalBurnerWaterTank unset operation");
+        }
+
     }
 
 
@@ -86,7 +99,12 @@ public class CoalBurner {
     }
 
     public void unsetConfigService(ConfigService configService) {
-        this.configService = null;
+        if(configService != null && configService.equals(this.configService)) {
+            this.configService = null;
+        }else{
+            logService.log(LogService.LOG_WARNING, "Skipping configService unset operation");
+        }
+
     }
 
 
@@ -101,7 +119,12 @@ public class CoalBurner {
         this.logService = logService;
     }
     public void unsetLogService(LogService logService) {
-        this.logService = null;
+        if(logService != null && logService.equals(this.logService)) {
+            this.logService = null;
+        }else{
+            logService.log(LogService.LOG_WARNING, "Skipping logService unset operation");
+        }
+
     }
 
 
@@ -110,21 +133,19 @@ public class CoalBurner {
     {
         if(scheduledExecutorService != null){
             scheduledExecutorService.shutdownNow();
-            throw new UnsupportedOperationException("scheduled has not been shutdown and nulled");
+            throw new UnsupportedOperationException("scheduledExecutorService has not been shutdown and nulled");
         }
         CycleExecutor activeCycleExecutor = new ActiveCycleExecutor(fanPin,dispenserPin);
         CycleExecutor stanCycleExecutor = new StandbyCycleExecutor(fanPin,dispenserPin);
-        scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
-        scheduledExecutorService.scheduleWithFixedDelay(new CoalBurnerRunnable(stanCycleExecutor, activeCycleExecutor), 1,1, TimeUnit.SECONDS);
 
-        System.out.println("Activating ... ");
+        scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+        scheduledExecutorService.scheduleWithFixedDelay(new CoalBurnerRunnable(stanCycleExecutor, activeCycleExecutor), 1, 1, TimeUnit.SECONDS);
         logService.log(LogService.LOG_INFO, "Activating ... ");
     }
 
     protected synchronized void deactivate(ComponentContext context)
     {
         scheduledExecutorService.shutdown();
-        System.out.println("Deactivating ... ");
         logService.log(LogService.LOG_INFO, "Deactivating ... ");
     }
 }
