@@ -12,9 +12,6 @@ class RaspiPinTranslator implements PinTranslator {
 
     @Override
     public Pin translate(AvailableGPIO availableGPIO) {
-        if(availableGPIO == null){
-            throw new UnsupportedOperationException("Pin not available");
-        }
         switch (availableGPIO) {
             case PIN_00:
                 return RaspiPin.GPIO_00;

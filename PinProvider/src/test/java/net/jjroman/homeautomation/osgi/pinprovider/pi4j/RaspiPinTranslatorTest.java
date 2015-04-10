@@ -20,7 +20,7 @@ public class RaspiPinTranslatorTest {
         }
     }
 
-    @Test(expected = UnsupportedOperationException.class)
+    @Test(expected = NullPointerException.class)
     public void exceptionThrownForNull(){
         PinTranslator pinTranslator = new RaspiPinTranslator();
         pinTranslator.translate(null);

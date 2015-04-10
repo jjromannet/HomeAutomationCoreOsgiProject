@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
  * Created by Jan on 06/04/2015.
  */
 class CoalBurnerRunnable implements Runnable {
-    static private final Logger LOGGER = LoggerFactory.getLogger(CoalBurnerRunnable.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CoalBurnerRunnable.class);
 
     volatile CoalBurnerState currentState = CoalBurnerState.STANDBY;
     volatile long standbyCounter = 0;

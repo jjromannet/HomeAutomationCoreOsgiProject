@@ -24,6 +24,8 @@ public class CoalBurner {
     private ConfigService configService;
     private LogService logService;
 
+    private ScheduledExecutorService scheduledExecutorService;
+
     @Reference(
             name = "fanPin",
             cardinality = ReferenceCardinality.MANDATORY,
@@ -128,7 +130,6 @@ public class CoalBurner {
     }
 
 
-    private ScheduledExecutorService scheduledExecutorService;
     protected synchronized void activate(ComponentContext context)
     {
         logService.log(LogService.LOG_DEBUG, context.toString());
