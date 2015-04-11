@@ -11,20 +11,21 @@ import java.util.*;
  */
 public class ConfigProvider implements ConfigService {
 
-    private final Map<String, Properties> repo;
+    private final Map<String, Map<String, String>> repo;
 
     public ConfigProvider(){
-        Properties coalBurnerProperties = new Properties();
-        coalBurnerProperties.setProperty("goto.active.temperature",  "55.00");
-        coalBurnerProperties.setProperty("goto.standby.temperature", "65.00");
-        Map<String, Properties> tmpRepo = new HashMap<String, Properties>();
+        Map<String, String> coalBurnerProperties = new HashMap<>();
+        coalBurnerProperties.put("goto.active.temperature",  "55.00");
+        coalBurnerProperties.put("goto.standby.temperature", "65.00");
+        Map<String, Map<String, String>> tmpRepo = new HashMap<String, Map<String, String>>();
         tmpRepo.put("coalburner", coalBurnerProperties);
 
-        Properties system = new Properties();
+        Map<String, String> system = new HashMap<String, String>();
         system.put("test", "test");
         tmpRepo.put("system-test", system);
         tmpRepo.put("system-null", null);
         this.repo = Collections.unmodifiableMap(tmpRepo);
+        //this.repo = tmpRepo;
     }
 
     @Override
@@ -33,8 +34,33 @@ public class ConfigProvider implements ConfigService {
             return null;
         }
         if(repo.containsKey(namespace) && repo.get(namespace) != null && repo.get(namespace).containsKey(key) ){
-            return repo.get(namespace).getProperty(key);
+            return repo.get(namespace).get(key);
         }
         return null;
+    }
+
+    @Override
+    public Map<String, String> getConfigValuesForNamespace(String namespace) {
+        Map<String, String> returnMap = new HashMap<>();
+        if(namespace == null){
+            return returnMap;
+        }
+        if(repo.containsKey(namespace)){
+            return Collections.unmodifiableMap(repo.get(namespace));
+        }
+        return returnMap;
+    }
+
+    @Override
+    public Map<String, Map<String, String>> getConfigValuesForNamespaces(Iterable<String> namespaces) {
+        Map<String, Map<String, String>> returnMap = new HashMap<>();
+        if(namespaces != null) {
+            for (String namespace : namespaces) {
+                if (repo.containsKey(namespace)) {
+                    returnMap.put(namespace, Collections.unmodifiableMap(repo.get(namespace)));
+                }
+            }
+        }
+        return returnMap;
     }
 }
