@@ -25,7 +25,6 @@ public class ConfigProvider implements ConfigService {
         tmpRepo.put("system-test", system);
         tmpRepo.put("system-null", null);
         this.repo = Collections.unmodifiableMap(tmpRepo);
-        //this.repo = tmpRepo;
     }
 
     @Override
