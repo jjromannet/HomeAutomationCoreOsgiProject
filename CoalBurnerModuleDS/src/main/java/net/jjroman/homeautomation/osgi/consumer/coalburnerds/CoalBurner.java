@@ -26,6 +26,9 @@ public class CoalBurner {
 
     private ScheduledExecutorService scheduledExecutorService;
 
+    public static final String CONFIG_GOTO_ACTIVE_TEMP= "goto.active.temperature";
+    public static final String CONFIG_GOTO_STANDBY_TEMP = "goto.standby.temperature";
+
     @Reference(
             name = "fanPin",
             cardinality = ReferenceCardinality.MANDATORY,

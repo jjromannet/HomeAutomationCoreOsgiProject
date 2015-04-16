@@ -13,10 +13,10 @@
             <id>sonatype</id>
             <url>https://oss.sonatype.org/content/groups/public</url>
         </repository>
-        <repository>
+       <repository>
             <id>local-maven-repo</id>
-            <url>file:///${project.basedir}/lib</url>
-        </repository>
+            <url>file:///C:/Users/Jan/IdeaProjects/HomeAutomationCoreOsgiProject/lib</url>
+        </repository> 
     </repositories>
 
     <modules>
