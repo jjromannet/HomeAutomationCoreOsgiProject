@@ -6,4 +6,5 @@ package net.jjroman.homeautomation.osgi.measureservice.api;
  */
 public interface DoubleMeasure {
     double getValue();
+    double subscribeToMeasureChange(MeasureConsumer<Double> consumer, MeasureName name);
 }

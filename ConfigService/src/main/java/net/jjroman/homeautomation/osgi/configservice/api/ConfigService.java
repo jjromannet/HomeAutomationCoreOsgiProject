@@ -15,15 +15,16 @@ import java.util.Map;
  */
 public interface ConfigService {
     /**
-     * This method is @deprecated as it may be inconsistent - this may happen when config are updated in meantime
+     * This method has been removed as it may be inconsistent - this may happen when config are updated in meantime
      * between geting two keys from same namespace use @see getConfigValuesForNamespace to get immuatable
      * set of configs, that are consistent.
      * @param namespace namespace of configuration needed
      * @param key particular key needed
      * @return String value of configured key
+     *
+     * String getConfigValueByNamespaceAndKey(String namespace, String key);
+     *
      */
-    @Deprecated
-    String getConfigValueByNamespaceAndKey(String namespace, String key);
 
     /**
      * this method is thread safe and transactional, all returned keys are from one config set it is not possible to
@@ -39,4 +40,7 @@ public interface ConfigService {
      * @return all keys belong to the configuration grouped by configuration in first level of map
      */
     Map<String, Map<String, String>> getConfigValuesForNamespaces(Iterable<String> namespaces);
+
+
+    Map<String, String> subscribeToConfigChanges(ConfigChangeConsumer consumer, ConfigNamespace namespace);
 }

@@ -17,6 +17,7 @@ public class StandbyCycleExecutor extends AbstractCycleExecutor {
     public void executeCycle(EnvironmentImmutableSnapshot environmentSnapshot) throws InterruptedException {
         try{
             fanPin.setState(HiLoPinState.LOW);
+            TimeUnit.SECONDS.sleep(environmentSnapshot.getStandbyTimeout());
             TimeUnit.SECONDS.sleep(environmentSnapshot.getActiveFanHeadStart());
             dispenserPin.setState(HiLoPinState.HIGH);
             TimeUnit.SECONDS.sleep(environmentSnapshot.getActiveDispenserRunTime());

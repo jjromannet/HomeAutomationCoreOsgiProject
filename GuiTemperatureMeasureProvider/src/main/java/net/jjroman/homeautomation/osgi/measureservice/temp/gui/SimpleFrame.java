@@ -1,6 +1,8 @@
 package net.jjroman.homeautomation.osgi.measureservice.temp.gui;
 
 import net.jjroman.homeautomation.osgi.measureservice.api.DoubleMeasure;
+import net.jjroman.homeautomation.osgi.measureservice.api.MeasureConsumer;
+import net.jjroman.homeautomation.osgi.measureservice.api.MeasureName;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
 import org.osgi.framework.ServiceReference;
@@ -47,6 +49,12 @@ public class SimpleFrame extends JFrame implements DoubleMeasure, ChangeListener
             retval = slider.getValue();
         }
         return retval;
+    }
+
+
+    @Override
+    public double subscribeToMeasureChange(MeasureConsumer<Double> consumer, MeasureName name) {
+        return 0;
     }
 
 

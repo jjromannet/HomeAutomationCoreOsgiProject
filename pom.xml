@@ -29,6 +29,8 @@
         <module>MeasurePeriodicConsumer</module>
         <module>ConfigProvider</module>
         <module>ConfigService</module>
+        <module>CoalBurner3</module>
+
         <!--<module>CoalBurnerModuleDS</module>-->
     </modules>
 
@@ -40,6 +42,16 @@
             <version>4.12</version>
             <scope>test</scope>
         </dependency>
+        <!--<dependency>
+            <groupId>net.jjroman.homeautomation.osgi</groupId>
+            <artifactId>MeasureService</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>net.jjroman.homeautomation.osgi</groupId>
+            <artifactId>PinProviderWebSocket</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>-->
     </dependencies>
 
     <properties>

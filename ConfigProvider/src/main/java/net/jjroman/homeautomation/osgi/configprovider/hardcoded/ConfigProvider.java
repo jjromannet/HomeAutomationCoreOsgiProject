@@ -1,5 +1,6 @@
 package net.jjroman.homeautomation.osgi.configprovider.hardcoded;
 
+import net.jjroman.homeautomation.osgi.configservice.api.ConfigChangeConsumer;
 import net.jjroman.homeautomation.osgi.configservice.api.ConfigService;
 
 import java.util.*;
@@ -28,17 +29,6 @@ public class ConfigProvider implements ConfigService {
     }
 
     @Override
-    public String getConfigValueByNamespaceAndKey(String namespace, String key) {
-        if(namespace == null || key == null) {
-            return null;
-        }
-        if(repo.containsKey(namespace) && repo.get(namespace) != null && repo.get(namespace).containsKey(key) ){
-            return repo.get(namespace).get(key);
-        }
-        return null;
-    }
-
-    @Override
     public Map<String, String> getConfigValuesForNamespace(String namespace) {
         Map<String, String> returnMap = new HashMap<>();
         if(namespace == null){
@@ -61,5 +51,13 @@ public class ConfigProvider implements ConfigService {
             }
         }
         return returnMap;
+    }
+
+    @Override
+    public Map<String, String> subscribeToConfigChanges(ConfigChangeConsumer consumer, String namespace) {
+        Map<String, String> currentConfig = getConfigValuesForNamespace(namespace);
+        // FIXME
+        consumer.updateConfig(currentConfig);
+        return currentConfig;
     }
 }

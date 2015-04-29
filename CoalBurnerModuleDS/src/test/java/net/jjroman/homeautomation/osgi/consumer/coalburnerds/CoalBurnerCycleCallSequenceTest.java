@@ -57,4 +57,5 @@ public class CoalBurnerCycleCallSequenceTest {
 
         assertEquals("dispenser run time equals", dispenserRunTime,dispenserRunTimeReceived);
     }
+
 }
