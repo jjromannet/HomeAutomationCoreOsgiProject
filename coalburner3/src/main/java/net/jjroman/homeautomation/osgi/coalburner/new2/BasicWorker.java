@@ -186,11 +186,11 @@ public class BasicWorker implements Callable<WorkerExecutionStats>, MeasureConsu
             LOGGER.info("Worker started");
             while (turnedOn) {
                 running = true;
-                if (TurnedOnState.HEAT.equals(currentState)) {
+                if (TurnedOnState.HEAT.equals(currentState) && turnedOn) {
                     // todo ENTERED HEAT STATE EVENT
                     coalBurnerExternals.fanStart();
                     TimeUnit.SECONDS.sleep(cfgHeatFanHeadstart);
-                    while (TurnedOnState.HEAT.equals(currentState)) {
+                    while (TurnedOnState.HEAT.equals(currentState) && turnedOn) {
                         TimeUnit.SECONDS.sleep(cfgHeatDelayBeforeDispensing);
                         coalBurnerExternals.dispenserStart();
                         TimeUnit.SECONDS.sleep(cfgHeatDispensing);
@@ -201,7 +201,7 @@ public class BasicWorker implements Callable<WorkerExecutionStats>, MeasureConsu
                 } else if (TurnedOnState.MAINTAIN.equals(currentState)) {
                     // todo ENTERED HEAT STATE EVENT
                     int counter = 0;
-                    while (TurnedOnState.MAINTAIN.equals(currentState)) {
+                    while (TurnedOnState.MAINTAIN.equals(currentState) && turnedOn) {
                         counter++;
                         TimeUnit.SECONDS.sleep(1);
                         if (counter > cfgMaintainIdleThreshold) {
